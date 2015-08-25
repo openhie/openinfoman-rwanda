@@ -10,8 +10,8 @@ declare variable $careServicesRequest as item() external;
 :) 
 
 
-let $id_number := $careServicesRequest/id_number
-let $id_type := $careServicesRequest/id_type
+let $id_number := ($careServicesRequest/id_number , $careServicesRequest/csd:id_number)[1]
+let $id_type := ($careServicesRequest/id_type, $careServicesRequest/csd:id_type)[1]
 
 let $provider := 
   if (exists($id_number) and exists($id_type))
