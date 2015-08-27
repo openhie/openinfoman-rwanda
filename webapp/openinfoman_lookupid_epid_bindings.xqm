@@ -37,10 +37,11 @@ declare
           <h2>Lookup EPID Operations on {$doc_name}</h2>
 	  <span>
 	    <form action="{$url}" method="GET" >
-	      <label for='id_type' >ID Type</label>
-	      <select  name='id_type'>
-		<option value='NID'>NID</option>
-	      </select>
+	      <label for='authority' >Assigning Authority</label>
+	      <input  name='authority' type='text'/>
+	      <br/>
+	      <label for='id_type' >ID Type (csd:otherID/@Code)</label>
+	      <input  name='id_type' type='text'/>
 	      <br/>
 	      <label for='id_number' >ID Number</label>
 	      <input type='text' size='60'  name='id_number'/>
@@ -56,29 +57,39 @@ declare
   %rest:path("/CSD/csr/{$doc_name}/careServicesRequest/{$search_name}/adapter/lookup_epid/lookup")
   %rest:query-param("id_type","{$id_type}")
   %rest:query-param("id_number","{$id_number}")
-  function page:read_entity($search_name,$doc_name,$id_type,$id_number) 
+  %rest:query-param("authority","{$authority}")
+  %output:method("xhtml")
+  function page:read_entity($search_name,$doc_name,$id_type,$id_number,$authority) 
 {
 
   let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
   let $doc := csd_dm:open_document($csd_webconf:db,$doc_name)
   
-  let $requestParams := 
-    <csd:requestParams function="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
-      <id_type>{$id_type}</id_type>
-      <id_number>{$id_number}</id_number>
-    </csd:requestParams>
 
-  let $results := csr_proc:process_CSR_stored_results($csd_webconf:db, $doc,$requestParams)
-  let $epid := substring-after(string($provider[1]/@entityID),'urn:uuid:')
+  let $careServicesRequest := 
+      <csd:careServicesRequest>
+       <csd:function urn="{$search_name}" resource="{$doc_name}" base_url="{$csd_webconf:baseurl}">
+         <csd:requestParams >
+	   <id_type>{$id_type}</id_type>
+	   <id_number>{$id_number}</id_number>
+	   <authority>{$authority}</authority>
+         </csd:requestParams>
+       </csd:function>
+      </csd:careServicesRequest>
+
+  
+  let $results := csr_proc:process_CSR_stored_results($csd_webconf:db, $doc , $careServicesRequest)
+  let $epid := substring-after(string($results[1]/@entityID),'urn:uuid:')
 
   return 
     if (exists($epid) and string-length($epid) > 0) 
-      $epid
+    then  $epid
     else 
       (:error :)
-      <http:response status="404" message="No provider found with ID number '{$id_number}' and ID type '{$id_type}'.">
+      <http:response status="404" message="No provider found with ID number '{$id_number}' and ID type '{$id_type}' for Authority '{$authority}'.">
 	<http:header name="Content-Language" value="en"/>
 	<http:header name="Content-Type" value="text/html; charset=utf-8"/>
+	{$results}
       </http:response>
 
 };

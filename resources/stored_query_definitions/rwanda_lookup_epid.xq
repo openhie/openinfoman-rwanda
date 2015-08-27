@@ -11,12 +11,13 @@ declare variable $careServicesRequest as item() external;
 
 
 let $id_number := ($careServicesRequest/id_number , $careServicesRequest/csd:id_number)[1]
+let $authority := ($careServicesRequest/authority , $careServicesRequest/csd:authority)[1]
 let $id_type := ($careServicesRequest/id_type, $careServicesRequest/csd:id_type)[1]
 
 let $provider := 
-  if (exists($id_number) and exists($id_type))
+  if (exists($id_number) and exists($id_type) and exists($authority))
   then 
-     let $provs :=   /csd:CSD/csd:providerDirectory/csd:provider[./csd:otherID[./@code = $id_type and ./text() = $id_number]]
+     let $provs :=   /csd:CSD/csd:providerDirectory/csd:provider[./csd:otherID[./@assigningAuthorityName = $authority  and  ./@code = $id_type  and ./text() = $id_number ]]
      return $provs[1]
   else ()
 

@@ -15,6 +15,7 @@
     <careServicesRequest>
       <id_type/>
       <id_number/>
+      <authority/>
     </careServicesRequest>
   </xforms:instance>
   <csd:extension type='lookup_epid' urn='urn:openhie.org:openinfoman:adapter'/>
