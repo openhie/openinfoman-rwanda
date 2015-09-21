@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<careServicesFunction xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:xforms="http://www.w3.org/2002/xforms"
+  xmlns:hfp="http://www.w3.org/2001/XMLSchema-hasFacetAndProperty"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:csd="urn:ihe:iti:csd:2013" 
+  xmlns="urn:ihe:iti:csd:2013" 
+  urn="urn:moh.gov.rw:extract_orgunits_rwanda:v2.19">
+  <description>
+    <pre>
+    Extracts Organisation Unit hierarchy and Facility/Site list from DATIM (DHIS2) as CSD Organization and Facility entities.   
+    Also creates SVS for relevant terminologies (e.g. facility/site type)
+
+    Imports: DHIS2 metadata export of Organsation Units, Organisation Unit Group,  Organisation Unit Group Set, Organization Unit Level from DHIS2 2.19
+    </pre>
+  </description>
+  <definition ><xi:include parse='text' href='extract_orgunits_rwanda.xq'/></definition>
+  <xforms:instance>
+    <careServicesRequest>
+      <file/>
+      <oid/>
+      <codelist/>
+      <urn/>
+    </careServicesRequest>
+  </xforms:instance>
+  <csd:extension type='datim' urn='urn:openhie.org:openinfoman:adapter'/>
+  <csd:extension type='upload' urn='urn:openhie.org:openinfoman:adapter:datim:action'/>
+  <csd:extension urn='urn:openhie.org:openinfoman:adapter:datim:action:uploadDXF:oid' type='1.2.3.4.5.6.7.8.9' />
+  <csd:extension urn='urn:openhie.org:openinfoman:adapter:datim:action:uploadDXF:codelist_prefix' type='DATIM' />
+</careServicesFunction>
