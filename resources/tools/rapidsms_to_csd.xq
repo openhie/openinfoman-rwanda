@@ -2,11 +2,11 @@ import module namespace csd_dm = "https://github.com/openhie/openinfoman/csd_dm"
 import module namespace csd_webconf =  "https://github.com/openhie/openinfoman/csd_webconf";
 import module namespace uuid = "https://github.com/openhie/openinfoman-datim/uuid";
 declare namespace csd  =  "urn:ihe:iti:csd:2013";
-let $facilities_doc_name := "DHIS2-Facilities"
+let $facilities_service_dir := "Facilities"
 let $CHW_doc_name := "CHW"
-let $doc :=  csd_dm:open_document($csd_webconf:db,$facilities_doc_name)
-let $file := file:read-text("./data.json")
-let $json := json:parse($file)
+let $doc :=  csd_dm:open_document($csd_webconf:db,$facilities_service_dir)
+let $chw_file := file:read-text("./chw.json")
+let $json := json:parse($chw_file)
 let $data :=
 <csd:CSD xmlns:csd="urn:ihe:iti:csd:2013">
   <csd:organizationDirectory/>
@@ -15,8 +15,8 @@ let $data :=
   <csd:providerDirectory>
 {
 for $record in $json/json/_
-let $facility_uuid := string($doc//csd:organization[string(./csd:otherID[@code="code"])=data($record/health__centre____code)]/@entityID)
-let $referal_facility_uuid := string($doc//csd:organization[string(./csd:otherID[@code="code"])=data($record/referral_hospital__code)]/@entityID)
+let $facility_uuid := string($doc//csd:facility[string(./csd:otherID[@code="code"])=data($record/health__centre____code)]/@entityID)
+let $referal_facility_uuid := string($doc//csd:facility[string(./csd:otherID[@code="code"])=data($record/referral__hospital____code)]/@entityID)
 return
     <csd:provider xmlns:csd="urn:ihe:iti:csd:2013" entityID="{concat("urn:uuid:",random:uuid())}">
       <csd:demographic>
