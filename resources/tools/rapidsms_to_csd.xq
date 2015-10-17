@@ -19,6 +19,7 @@ let $facility_uuid := string($doc//csd:facility[string(./csd:otherID[@code="code
 let $referal_facility_uuid := string($doc//csd:facility[string(./csd:otherID[@code="code"])=data($record/referral__hospital____code)]/@entityID)
 return
     <csd:provider xmlns:csd="urn:ihe:iti:csd:2013" entityID="{concat("urn:uuid:",random:uuid())}">
+      <csd:otherID assigningAuthorityName="2.25.18004676417021084690567854557565765659015601" code="5">{data($record/national__id)}</csd:otherID>
       <csd:demographic>
         <csd:name>
           <csd:commonName>{fn:normalize-space(concat(data($record/given__name),data($record/surname)))}</csd:commonName>
