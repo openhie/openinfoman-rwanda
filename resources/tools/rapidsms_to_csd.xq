@@ -34,6 +34,7 @@ return
         </csd:facility>
       </csd:facilities>
       <csd:referalHospital entityID="{$referal_facility_uuid}"></csd:referalHospital>
+      <csd:record created="{data($record/created)}" updated="{data($record/updated)}" sourceDirectory="http://rapidsms.moh.gov.rw:5000/ws/rest/v1/chws" status="106-002"/>
     </csd:provider>
 }
 </csd:providerDirectory>
